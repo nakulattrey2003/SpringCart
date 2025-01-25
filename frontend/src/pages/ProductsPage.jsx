@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-// import tailwindcss from "@tailwindcss/vite";
+import ProductCard from "../components/ProductCard";
 
-const ProductList = () => {
-  const [products, setProducts] = useState([]);
+const ProductsPage = () => {
+  const [productsList, setProductsList] = useState([]);
 
   const fetchProducts = async () => {
     const response = await fetch("http://localhost:8080/products");
 
     const data = await response.json();
-    setProducts(data);
+
+    setProductsList(data);
   };
 
   useEffect(() => {
@@ -19,20 +20,12 @@ const ProductList = () => {
     <div>
       <h1 className="text-3xl font-light underline">Products List</h1>
       <ul>
-        {products.map((product) => (
-          <li key={product.id}>
-            <h2>{product.name}</h2>
-            <p>{product.description}</p>
-            <p>{product.brand}</p>
-            <p>{product.category}</p>
-            <p>{product.releaseDate}</p>
-            <p>{product.quantity}</p>
-            <strong>Price: ${product.price}</strong>
-          </li>
+        {productsList.map((product) => (
+          <ProductCard key={product.id} product={product} />
         ))}
       </ul>
     </div>
   );
 };
 
-export default ProductList;
+export default ProductsPage;

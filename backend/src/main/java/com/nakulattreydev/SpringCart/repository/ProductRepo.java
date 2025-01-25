@@ -8,5 +8,5 @@ import com.nakulattreydev.SpringCart.model.ProductModel;
 @Repository
 public interface ProductRepo extends JpaRepository<ProductModel, Integer>
 {
-
+    
 }
