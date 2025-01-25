@@ -1,6 +1,7 @@
 package com.nakulattreydev.SpringCart.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,10 @@ public class ProductService
         List<ProductModel> products = repo.findAll();
         System.out.println(products);
         return repo.findAll();
+    }
+    public ProductModel getProductById(int id) 
+    {
+        return repo.findById(id).orElse(null);
     }
 
 }

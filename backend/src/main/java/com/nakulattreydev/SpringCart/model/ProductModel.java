@@ -2,7 +2,8 @@ package com.nakulattreydev.SpringCart.model;
 
 import java.util.Date;
 
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,8 @@ public class ProductModel
     private String brand;
     private double price;
     private String category;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date releaseDate;
     private int quantity;
 
