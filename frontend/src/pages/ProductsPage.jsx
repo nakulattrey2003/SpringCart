@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import ProductCard from "../components/ProductCard";
 import Navbar from "../components/Navbar";
-import {Footer} from "../components/Footer";
+import { Footer } from "../components/Footer";
 
 const ProductsPage = () => {
   const [productsList, setProductsList] = useState([]);

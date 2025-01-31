@@ -1,18 +1,20 @@
 package com.nakulattreydev.SpringCart.controller;
 
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nakulattreydev.SpringCart.model.ProductModel;
 import com.nakulattreydev.SpringCart.service.ProductService;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -28,14 +30,39 @@ public class ProductController
     }
 
     @GetMapping("/products")
-    public List<ProductModel> getAllProducts()
+    public ResponseEntity<List<ProductModel>> getAllProducts()
     {
-        return service.getAllProducts();
+        return new ResponseEntity<>(service.getAllProducts(), HttpStatus.OK);
     }
 
     @GetMapping("/product/{id}")
-    public ProductModel getProductById(@PathVariable int id)
+    public ResponseEntity<ProductModel> getProductById(@PathVariable int id)
     {
-        return service.getProductById(id);
+        ProductModel productModel = service.getProductById(id);
+
+        if(productModel == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else return new ResponseEntity<>(productModel, HttpStatus.OK);
     }
+
+    @PostMapping("/addProduct")
+    public ResponseEntity<?> addProduct(ProductModel product, MultipartFile imageFile)
+    {
+        try {
+            ProductModel product1 = service.addProduct(product, imageFile);
+            return new ResponseEntity<>(product1, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+   @GetMapping("/product/image/{id}")
+   public ResponseEntity<byte[]> getImageByProductId(@PathVariable int id)
+   {
+       ProductModel productModel = service.getProductById(id);
+       byte[] imageFile = productModel.getImageData();
+
+       return ResponseEntity.ok()
+           .contentType(MediaType.valueOf(productModel.getImageType()))
+           .body(imageFile);
+   }
 }
