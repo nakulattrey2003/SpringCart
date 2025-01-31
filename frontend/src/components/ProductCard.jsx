@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
@@ -8,12 +8,15 @@ const ProductCard = ({ product }) => {
 
   const fetchImage = async () => {
     const response = await fetch(
-      `http://localhost:8080/products/image/${product.id}`
+      `http://localhost:8080/product/image/${product.id}`
     );
 
-    const data = await response.json();
+    const blob = await response.blob();
+    const imageUrl = URL.createObjectURL(blob);
 
-    setProductImage(data);
+    console.log("Image URL:", imageUrl);
+
+    setProductImage(imageUrl);
   };
 
   const handleProductClick = () => {
@@ -22,16 +25,16 @@ const ProductCard = ({ product }) => {
 
   useEffect(() => {
     fetchImage();
-  }, []);
+  }, [product.id]);
 
   return (
     <div className="bg-gray-900 text-white rounded-2xl p-6 shadow-lg border border-gray-700 max-w-sm mx-auto hover:scale-105 transition-transform duration-300 shadow-gray-800">
       <li key={product.id} className="list-none space-y-6">
         {/* Product Image */}
         <div className="h-48 w-full rounded-lg overflow-hidden">
-          {imageSrc ? (
+          {productImage ? (
             <img
-              src={imageSrc}
+              src={productImage}
               alt={product.name}
               className="w-full h-48 object-cover rounded-lg"
             />
