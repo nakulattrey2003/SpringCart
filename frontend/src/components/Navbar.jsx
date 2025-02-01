@@ -9,7 +9,7 @@ const Header = () => {
   };
 
   const navigateToAddProduct = () => {
-    navigate("/add-product"); 
+    navigate("/addProduct"); 
   };
 
   const navigateToCategories = () => {
