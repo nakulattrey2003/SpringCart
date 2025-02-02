@@ -14,8 +14,6 @@ const ProductCard = ({ product }) => {
     const blob = await response.blob();
     const imageUrl = URL.createObjectURL(blob);
 
-    console.log("Image URL:", imageUrl);
-
     setProductImage(imageUrl);
   };
 

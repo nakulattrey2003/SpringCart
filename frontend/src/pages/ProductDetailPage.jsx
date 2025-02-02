@@ -41,6 +41,23 @@ const ProductDetail = () => {
     if (productDetails.id) fetchProductImage();
   }, [productDetails.id]);
 
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/deleteProduct/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) throw new Error("Failed to delete product");
+      alert("Product deleted successfully");
+      navigate("/products");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete product");
+    }
+  };
+
   return (
     <div>
       <Navbar />
@@ -48,7 +65,7 @@ const ProductDetail = () => {
       <div className="min-h-screen bg-gray-900 text-white p-12 relative">
         {/* Close Button */}
         <button
-          onClick={() => navigate("/products")}
+          onClick={() => navigate(`/products`)}
           className="absolute top-6 right-6 text-gray-400 hover:text-gray-200 text-3xl font-bold transition"
         >
           ✕
@@ -111,10 +128,13 @@ const ProductDetail = () => {
 
             {/* Buttons */}
             <div className="flex gap-6">
-              <button className="bg-green-600 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-green-500 transition duration-200 shadow-md">
+              <button
+                onClick={() => navigate(`/updateProduct/${id}`)}
+                className="bg-green-600 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-green-500 transition duration-200 shadow-md"
+              >
                 Update
               </button>
-              <button className="bg-red-600 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-red-500 transition duration-200 shadow-md">
+              <button onClick={handleDelete} className="bg-red-600 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-red-500 transition duration-200 shadow-md">
                 Delete
               </button>
             </div>

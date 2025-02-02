@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProductsPage from "./pages/ProductsPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import AddProductPage from "./pages/AddProductPage";
+import UpdateProductPage from "./pages/UpdateProductPage";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/product/:id" element={<ProductDetailPage />} />
         <Route path="/addProduct" element={<AddProductPage />} />
+        <Route path="/updateProduct/:id" element={<UpdateProductPage />} />
       </Routes>
     </Router>
   );

@@ -47,10 +47,13 @@ public class ProductController
     @PostMapping("/addProduct")
     public ResponseEntity<?> addProduct(ProductModel product, MultipartFile imageFile)
     {
-        try {
+        try 
+        {
             ProductModel product1 = service.addProduct(product, imageFile);
             return new ResponseEntity<>(product1, HttpStatus.CREATED);
-        } catch (Exception e) {
+        }
+        catch (Exception e) 
+        {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -64,5 +67,33 @@ public class ProductController
        return ResponseEntity.ok()
            .contentType(MediaType.valueOf(productModel.getImageType()))
            .body(imageFile);
+   }
+
+   @PutMapping("/updateProduct/{id}")
+   public ResponseEntity<?> updateProduct(@PathVariable int id, ProductModel product, MultipartFile imageFile)
+   {
+       try 
+       {
+           ProductModel product1 = service.updateProduct(id, product, imageFile);
+           return new ResponseEntity<>(product1, HttpStatus.OK);
+       } 
+       catch (Exception e) 
+       {
+           return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+       }
+   }
+
+   @DeleteMapping("/deleteProduct/{id}")
+   public ResponseEntity<?> deleteProduct(@PathVariable int id)
+   {
+       try 
+       {
+           service.deleteProduct(id);
+           return new ResponseEntity<>("Deleted", HttpStatus.OK);
+       } 
+       catch (Exception e) 
+       {
+           return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+       }
    }
 }

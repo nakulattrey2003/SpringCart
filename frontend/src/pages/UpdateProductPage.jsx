@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
-const AddProductPage = () => {
-  // State to store form inputs
+const UpdateProductPage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState({
     name: "",
     description: "",
@@ -12,8 +14,31 @@ const AddProductPage = () => {
     stock: "",
     category: "",
   });
-
   const [image, setImage] = useState(null);
+
+  // Fetch existing product details
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/product/${id}`);
+        if (!response.ok) throw new Error("Failed to fetch product details");
+        const data = await response.json();
+        setProduct({
+          name: data.name,
+          description: data.description,
+          price: data.price,
+          brand: data.brand,
+          releaseDate: data.releaseDate,
+          stock: data.quantity,
+          category: data.category,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProductDetails();
+  }, [id]);
 
   // Handle form field changes
   const handleChange = (e) => {
@@ -24,52 +49,78 @@ const AddProductPage = () => {
     }));
   };
 
-  // Handle image file selection
+  // Handle image selection
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]); // Store the selected file
+      setImage(e.target.files[0]); // Store the selected image
     }
   };
 
-  // Handle form submission
+  // Handle form submission (Update Product)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Create form data
     const formData = new FormData();
-    formData.append("productModel", JSON.stringify(product)); // Append the product object
-    formData.append("imageFile", image); // Append the selected image file
+    // formData.append("productModel", JSON.stringify(product));
+    formData.append("name", product.name);
+    formData.append("description", product.description);
+    formData.append("price", product.price);
+    formData.append("brand", product.brand);
+    formData.append("releaseDate", product.releaseDate);
+    formData.append("stock", product.stock);
+    formData.append("category", product.category);
+    if (image) formData.append("imageFile", image);
+
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
+    }
 
     try {
-      const response = await fetch("http://localhost:8080/addProduct", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `http://localhost:8080/updateProduct/${id}`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
-        alert("There was an error adding the product");
+        console.log(1);
+        alert("Failed to update product");
       } else {
-        alert("Product added successfully");
-        navigate("/product");
+        console.log(2);
+
+        alert("Product updated successfully");
+        navigate("/products");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("There was an error adding the product");
+      alert("There was an error updating the product");
     }
   };
 
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto max-w-4xl p-6">
-        <h2 className="text-2xl font-bold text-green-500 mb-4">Add Product</h2>
+      {/* Close Button */}
+      <button
+        onClick={() => navigate(`/product/${id}`)}
+        className="absolute mt-6 right-6 text-gray-400 hover:text-gray-200 text-3xl font-bold transition"
+      >
+        ✕
+      </button>
+      <div className="container mx-auto max-w-4xl p-6 relative">
+        <h2 className="text-2xl font-bold text-green-500 mb-4">
+          Update Product
+        </h2>
         <form
           onSubmit={handleSubmit}
           className="space-y-6 bg-gray-800 p-6 rounded-lg shadow-lg"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Product Name */}
-            <div className="w-full">
+            <div>
               <label className="block text-white mb-2" htmlFor="name">
                 Name:
               </label>
@@ -83,8 +134,9 @@ const AddProductPage = () => {
                 required
               />
             </div>
-            {/* Product Brand */}
-            <div className="w-full">
+
+            {/* Brand */}
+            <div>
               <label className="block text-white mb-2" htmlFor="brand">
                 Brand:
               </label>
@@ -100,7 +152,7 @@ const AddProductPage = () => {
             </div>
           </div>
 
-          {/* Product Description */}
+          {/* Description */}
           <div>
             <label className="block text-white mb-2" htmlFor="description">
               Description:
@@ -116,7 +168,7 @@ const AddProductPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Product Price */}
+            {/* Price */}
             <div>
               <label className="block text-white mb-2" htmlFor="price">
                 Price:
@@ -132,7 +184,7 @@ const AddProductPage = () => {
               />
             </div>
 
-            {/* Product Release Date */}
+            {/* Release Date */}
             <div>
               <label className="block text-white mb-2" htmlFor="releaseDate">
                 Release Date:
@@ -150,7 +202,7 @@ const AddProductPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Product Stock Quantity */}
+            {/* Stock Quantity */}
             <div>
               <label className="block text-white mb-2" htmlFor="stock">
                 Stock Quantity:
@@ -166,10 +218,10 @@ const AddProductPage = () => {
               />
             </div>
 
-            {/* Product Image URL */}
+            {/* Image Upload */}
             <div>
               <label className="block text-white mb-2" htmlFor="image">
-                Image:
+                Product Image:
               </label>
               <input
                 type="file"
@@ -179,7 +231,7 @@ const AddProductPage = () => {
             </div>
           </div>
 
-          {/* Product Category */}
+          {/* Category */}
           <div>
             <label className="block text-white mb-2" htmlFor="category">
               Product Category:
@@ -197,7 +249,6 @@ const AddProductPage = () => {
               <option value="fashion">Fashion</option>
               <option value="home-appliances">Home Appliances</option>
               <option value="books">Books</option>
-              {/* Add more categories as needed */}
             </select>
           </div>
 
@@ -206,7 +257,7 @@ const AddProductPage = () => {
             type="submit"
             className="w-full p-3 bg-green-500 text-white rounded-lg hover:bg-green-600"
           >
-            Add Product
+            Update Product
           </button>
         </form>
       </div>
@@ -214,4 +265,4 @@ const AddProductPage = () => {
   );
 };
 
-export default AddProductPage;
+export default UpdateProductPage;

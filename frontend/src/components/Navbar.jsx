@@ -1,15 +1,36 @@
-import React from "react";
-import { useNavigate } from "react-router-dom"; 
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { IoSearchSharp } from "react-icons/io5";
 
 const Header = () => {
   const navigate = useNavigate();
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/searchProduct/search?query=${searchQuery}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch search results");
+        }
+        const data = await response.json();
+        console.log("Search Results:", data); // Handle the search results
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+      }
+    }
+  };
 
   const navigateToHome = () => {
     navigate("/products");
   };
 
   const navigateToAddProduct = () => {
-    navigate("/addProduct"); 
+    navigate("/addProduct");
   };
 
   const navigateToCategories = () => {
@@ -23,9 +44,29 @@ const Header = () => {
   return (
     <header className="bg-black text-white p-4 border-b-1 border-green-900 shadow-lg shadow-lime-400">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-green-500 animate">
+        <button
+          onClick={() => navigate("/products")}
+          className="text-2xl font-bold text-green-500 animate"
+        >
           SpringCart
-        </h1>
+        </button>
+
+        {/* Search Bar with Icon */}
+        <form onSubmit={handleSearch} className="relative w-[700px]">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="px-4 py-2 w-full rounded-lg text-white border border-green-500 focus:outline-none focus:ring-2 focus:ring-green-400 pr-10"
+          />
+          <button
+            type="submit"
+            className="cursor-pointer absolute inset-y-0 right-3 flex items-center text-gray-300 hover:text-white"
+          >
+            <IoSearchSharp size={20} />
+          </button>
+        </form>
         <nav>
           <ul className="flex space-x-6">
             <li>
@@ -72,3 +113,71 @@ const Header = () => {
 };
 
 export default Header;
+// import React, { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { IoSearchSharp } from "react-icons/io5";
+
+// const Header = () => {
+//   const navigate = useNavigate();
+//   const [searchQuery, setSearchQuery] = useState("");
+
+//   const handleSearch = (e) => {
+//     e.preventDefault();
+//     if (searchQuery.trim()) {
+//       navigate(`/search?q=${searchQuery}`);
+//     }
+//   };
+
+//   return (
+//     <header className="bg-black text-white p-4 border-b border-green-900 shadow-lg shadow-lime-400">
+//       <div className="container mx-auto flex justify-between items-center">
+//         <button
+//           onClick={() => navigate("/products")}
+//           className="text-2xl font-bold text-green-500"
+//         >
+//           SpringCart
+//         </button>
+
+//         {/* Navigation */}
+//         <nav>
+//           <ul className="flex space-x-6">
+//             <li>
+//               <button
+//                 onClick={() => navigate("/products")}
+//                 className="text-green-400 border-b animate-pulse hover:text-green-600"
+//               >
+//                 Home
+//               </button>
+//             </li>
+//             <li>
+//               <button
+//                 onClick={() => navigate("/addProduct")}
+//                 className="text-white hover:text-green-600 transition duration-200"
+//               >
+//                 Add Product
+//               </button>
+//             </li>
+//             <li>
+//               <button
+//                 onClick={() => navigate("/categories")}
+//                 className="text-white hover:text-green-600 transition duration-200"
+//               >
+//                 Categories
+//               </button>
+//             </li>
+//             <li>
+//               <button
+//                 onClick={() => navigate("/contact")}
+//                 className="text-white hover:text-green-600 transition duration-200"
+//               >
+//                 Contact
+//               </button>
+//             </li>
+//           </ul>
+//         </nav>
+//       </div>
+//     </header>
+//   );
+// };
+
+// export default Header;
