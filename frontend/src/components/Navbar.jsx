@@ -12,7 +12,7 @@ const Header = () => {
     if (searchQuery.trim()) {
       try {
         const response = await fetch(
-          `http://localhost:8080/searchProduct/search?query=${searchQuery}`
+          `http://localhost:8080/search?keyword=${searchQuery}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch search results");
@@ -113,71 +113,3 @@ const Header = () => {
 };
 
 export default Header;
-// import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { IoSearchSharp } from "react-icons/io5";
-
-// const Header = () => {
-//   const navigate = useNavigate();
-//   const [searchQuery, setSearchQuery] = useState("");
-
-//   const handleSearch = (e) => {
-//     e.preventDefault();
-//     if (searchQuery.trim()) {
-//       navigate(`/search?q=${searchQuery}`);
-//     }
-//   };
-
-//   return (
-//     <header className="bg-black text-white p-4 border-b border-green-900 shadow-lg shadow-lime-400">
-//       <div className="container mx-auto flex justify-between items-center">
-//         <button
-//           onClick={() => navigate("/products")}
-//           className="text-2xl font-bold text-green-500"
-//         >
-//           SpringCart
-//         </button>
-
-//         {/* Navigation */}
-//         <nav>
-//           <ul className="flex space-x-6">
-//             <li>
-//               <button
-//                 onClick={() => navigate("/products")}
-//                 className="text-green-400 border-b animate-pulse hover:text-green-600"
-//               >
-//                 Home
-//               </button>
-//             </li>
-//             <li>
-//               <button
-//                 onClick={() => navigate("/addProduct")}
-//                 className="text-white hover:text-green-600 transition duration-200"
-//               >
-//                 Add Product
-//               </button>
-//             </li>
-//             <li>
-//               <button
-//                 onClick={() => navigate("/categories")}
-//                 className="text-white hover:text-green-600 transition duration-200"
-//               >
-//                 Categories
-//               </button>
-//             </li>
-//             <li>
-//               <button
-//                 onClick={() => navigate("/contact")}
-//                 className="text-white hover:text-green-600 transition duration-200"
-//               >
-//                 Contact
-//               </button>
-//             </li>
-//           </ul>
-//         </nav>
-//       </div>
-//     </header>
-//   );
-// };
-
-// export default Header;

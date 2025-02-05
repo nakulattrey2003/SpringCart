@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -96,4 +99,13 @@ public class ProductController
            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
        }
    }
+
+   @GetMapping("/search")
+   public ResponseEntity<List<ProductModel>> searchProducts(@RequestParam String keyword) 
+   {
+        System.out.println("Keyword: " + keyword);
+        List<ProductModel> products = service.searchProducts(keyword);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+   }
+   
 }
