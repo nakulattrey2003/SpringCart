@@ -14,3 +14,6 @@ Update Page
 
 Delete Product
 ![image](https://github.com/user-attachments/assets/718a562a-ddf7-4a0f-a813-2d8e84490dcc)
+
+Api's Testing in Postman
+![image](https://github.com/user-attachments/assets/accfcb02-37fd-4b84-bae3-42cedd129e7e)
